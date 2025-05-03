@@ -1,3 +1,7 @@
+> **Academic Paper – Database Design**  
+> This database design was submitted as part of a university assignment exploring database design for a fictitious system called GardenFriends.
+> **Author:** Terence Lee
+
 # GardenFriends Event Management System (Database Design)
 
 GardenFriends is a web-based platform designed to connect members of a garden community. The system allows users to register their skills, sign up for events, and participate in a variety of gardening-related activities. The project was initially focused on skill swapping but evolved to prioritize event management after community feedback.
