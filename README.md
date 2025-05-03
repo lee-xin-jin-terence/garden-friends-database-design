@@ -105,3 +105,33 @@ The **CategoryDescription** is also unique as no two CategoryDescription values 
 - When both **StartDate** and **EndDate** are filled, **StartDate must be equal to or earlier than EndDate**.
 
 
+## REQUEST Relation
+
+| Column Name     | Brief Description                                                | Oracle Data Type and Size | Domain (Allowable Values)                                        | Default Value     | Required?  | Unique? | Key?        |
+|-----------------|------------------------------------------------------------------|---------------------------|-----------------------------------------------------------------|-------------------|------------|---------|-------------|
+| **RequestID**   | The unique identifier of the request                             | VARCHAR2(20)              | Any valid request identifier                                     | No Default Value  | Yes        | Yes     | Primary Key |
+| **MemberID**    | The identifier of the member making the request                  | VARCHAR2(20)              | Any valid member identifier (must belong to a member, not a guest) | No Default Value  | Yes        | No      | Foreign Key |
+| **TaskName**    | The name of the task the requester is seeking help for           | VARCHAR2(50)              | Any valid task name from the `ServiceName` in the `SERVICE` relation | No Default Value  | Yes        | No      | Foreign Key |
+| **BroadCategory**| The category of service the requester is seeking                | VARCHAR2(20)              | Any valid category (e.g., ‘Maintenance’)                         | No Default Value  | Yes        | No      |             |
+| **Description** | Detailed description of the service the requester is requesting  | VARCHAR2(600)             | Any valid description of the request (e.g., ‘6 overgrown citrus trees that need pruning’) | No Default Value  | Yes        | No      |             |
+| **DatePosted**  | The date the request was posted on the GardenFriends website     | DATE                      | Any valid date                                                   | No Default Value  | Yes        | No      |             |
+| **StartDate**   | The date when the request starts, marking the service start date | DATE                      | Any valid starting date (must be before or equal to EndDate)     | No Default Value  | No         | No      |             |
+| **EndDate**     | The date when the request ends, marking the service end date     | DATE                      | Any valid ending date (must be after or equal to StartDate)      | No Default Value  | No         | No      |             |
+| **UrgencyLevel**| The urgency level of the request                                 | VARCHAR2(19)              | Valid values: ‘as soon as possible’, ‘normal’                    | ‘normal’          | No         | No      |             |
+
+### Foreign Keys
+- **MemberID** references `MEMBER(MemberID)`
+  - `ON DELETE CASCADE`
+  - `ON UPDATE NO ACTION`
+
+- **TaskName** references `SERVICE(ServiceName)`
+  - `ON DELETE NO ACTION`
+  - `ON UPDATE NO ACTION`
+
+### Additional Notes:
+- Ensure that either **UrgencyLevel = 'as soon as possible'** or **EndDate is not null** when the record is entered.
+- If **StartDate** is filled, **EndDate must also be filled**. When both are filled, ensure **StartDate <= EndDate**.
+- If **StartDate** is filled, check that **DatePosted <= StartDate**.
+- If only **EndDate** is filled, check that **DatePosted <= EndDate**.
+- Use a **trigger** to check if the member has an existing service in the `MEMBER_SERVICE` relation before making a request.
+- Use triggers to ensure requests are only made by members, not guests.
