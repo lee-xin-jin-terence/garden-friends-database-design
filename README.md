@@ -1,5 +1,5 @@
 > **Academic Paper – Database Design**  
-> This database design was submitted as part of a university assignment exploring database design for a fictitious system called GardenFriends.
+> This database design was submitted as part of a university assignment exploring database design for a fictitious system called GardenFriends. <br/>
 > **Author:** Terence Lee
 
 # GardenFriends Event Management System (Database Design)
