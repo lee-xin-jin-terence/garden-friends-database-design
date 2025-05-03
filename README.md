@@ -24,4 +24,5 @@ The project includes a well-structured database schema to store user, event, and
 - Events are categorized and include accessibility and location information.
 
 
-<img width="719" alt="image" src="https://github.com/user-attachments/assets/fc89228e-e783-4a10-9ad2-98a8e77c5da6" />
+![ASSIGNMENT_2_ERD_DIAGRAM](https://github.com/user-attachments/assets/fa01496b-ac33-4192-a3be-b8063ed22ce3)
+
