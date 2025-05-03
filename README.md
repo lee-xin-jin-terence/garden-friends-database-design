@@ -29,7 +29,7 @@ The project includes a well-structured database schema to store user, event, and
 
 ## Data Dictionary
 
-**MEMBER Relation**
+### MEMBER Relation
 
 | Column Name     | Brief Description                                                            | Oracle Data Type and Size | Domain (Allowable Values)                          | Default Value     | Required?              | Unique?         | Key?         |
 |-----------------|-----------------------------------------------------------------------------|---------------------------|----------------------------------------------------|-------------------|------------------------|-----------------|--------------|
@@ -43,7 +43,15 @@ The project includes a well-structured database schema to store user, event, and
 | **ContactNumber** | The contact/mobile number of the member/guest. Assumes that everyone has a unique contact number. | VARCHAR2(20) | Any valid contact number                           | No Default Value  | Yes                    | Yes             | Alternate Key|
 | **Biography**    | A simple description about the member’s gardening interest. Applies only to members, not guests. | VARCHAR2(600)             | Any valid description of the member’s gardening interests | No Default Value  | Required for records where MembershipType=’Member’, to be left null for records where MembershipType=’Guest’ | No |              |
 
-### Additional Remarks:
-None
 
 
+
+### SERVICE_CATEGORY Relation
+
+| Column Name        | Brief Description                                           | Oracle Data Type and Size | Domain (Allowable Values)                                              | Default Value     | Required?  | Unique? | Key?        |
+|--------------------|-------------------------------------------------------------|---------------------------|-----------------------------------------------------------------------|-------------------|------------|---------|-------------|
+| **ServiceCategoryName** | The name of the service category                             | VARCHAR2(20)              | Any valid service category (e.g. ‘maintenance’, ‘pickup and delivery’, ‘landscaping’) | No Default Value  | Yes        | Yes     | Primary Key |
+| **CategoryDescription** | The description of the service category                      | VARCHAR2(600)             | Any valid description of the service category                           | No Default Value  | Yes        | Yes     | Alternate Key |
+
+### Remarks:
+The **CategoryDescription** is also unique as no two CategoryDescription values should have the same text.
