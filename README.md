@@ -11,7 +11,7 @@ GardenFriends is a web-based platform designed to connect members of a garden co
 This project was developed to meet the requirements of Joana Dawson, who wanted a platform where members could host, attend, and participate in various gardening events. The system was designed to handle user registrations, event creation, and management, as well as the roles of event organizers, leaders, and helpers.
 
 ### Key Features:
-- **User Registration**: Members can sign up with personal details and the skills they are willing to share.
+- **User Registration**: Members can sign up with personal details and the skills/services they are willing to share/provide.
 - **Event Categories**: The platform supports three event types: 
   - *Open Gardens* – guided tours of garden features.
   - *Skills and Techniques* – hands-on learning experiences.
