@@ -1,10 +1,10 @@
-# GardenFriends Event Management System
+# GardenFriends Event Management System (Database Design)
 
 GardenFriends is a web-based platform designed to connect members of a garden community. The system allows users to register their skills, sign up for events, and participate in a variety of gardening-related activities. The project was initially focused on skill swapping but evolved to prioritize event management after community feedback.
 
 ## Overview
 
-This project was developed to meet the requirements of Astrid Winterblossom, who wanted a platform where members could host, attend, and participate in various gardening events. The system was designed to handle user registrations, event creation, and management, as well as the roles of event organizers, leaders, and helpers.
+This project was developed to meet the requirements of Joana Dawson, who wanted a platform where members could host, attend, and participate in various gardening events. The system was designed to handle user registrations, event creation, and management, as well as the roles of event organizers, leaders, and helpers.
 
 ### Key Features:
 - **User Registration**: Members can sign up with personal details and the skills they are willing to share.
@@ -135,3 +135,71 @@ The **CategoryDescription** is also unique as no two CategoryDescription values 
 - If only **EndDate** is filled, check that **DatePosted <= EndDate**.
 - Use a **trigger** to check if the member has an existing service in the `MEMBER_SERVICE` relation before making a request.
 - Use triggers to ensure requests are only made by members, not guests.
+
+## EVENT Relation
+
+| Column Name             | Brief Description                                              | Oracle Data Type and Size | Domain (Allowable Values)                                                    | Default Value     | Required?  | Unique? | Key?        |
+|-------------------------|----------------------------------------------------------------|---------------------------|-----------------------------------------------------------------------------|-------------------|------------|---------|-------------|
+| **EventID**             | The identifier of the event that allows us to uniquely identify a particular event | VARCHAR2(20)              | Any valid event identifier                                                   | No Default Value  | Yes        | Yes     | Primary Key |
+| **Title**               | The title of the event                                        | VARCHAR2(50)              | Any valid event title                                                        | No Default Value  | Yes        | No      |             |
+| **EventCategory**       | The type of event that is organised                           | VARCHAR2(3)               | ‘OG’, ‘ST’, or ‘KYP’                                                         | No Default Value  | Yes        | No      |             |
+| **Description**         | A detailed description of the event that is organised         | VARCHAR2(600)             | Any valid event description                                                   | No Default Value  | Yes        | No      |             |
+| **EventDate**           | The date the event is held                                    | DATE                      | Any valid date                                                                | No Default Value  | Yes        | No      |             |
+| **Location**            | The place where the event is held                              | VARCHAR2(30)              | Any valid location                                                           | No Default Value  | Yes        | No      |             |
+| **Suburb**              | The suburb where the event is held                            | VARCHAR2(20)              | Any valid suburb                                                             | No Default Value  | Yes        | No      |             |
+| **PlacesAvailable**     | The maximum number of people that can take part in the event (Maximum number of attendees, where helpers are excluded) | NUMBER(6,0)              | Any number between 1 and 999999 (inclusive), excluding negative or zero values | No Default Value  | Yes        | No      |             |
+| **LocationPostcode**    | The postcode of the event location                            | CHAR(6)                   | Any valid postcode (assuming length of postcode is 6 characters)             | No Default Value  | Yes        | No      |             |
+| **EventInstructions**   | Instructions given out to the participants of the event       | VARCHAR2(600)             | Any valid event instructions                                                  | No Default Value  | No         | No      |             |
+| **MeetAccessibilityGuidelines** | States whether the event meets accessibility guidelines for people in wheelchairs or with limited mobility | VARCHAR(3)               | Only two values: ‘Yes’, ‘No’                                                 | No Default Value  | Yes        | No      |             |
+| **OrganiserID**         | The identifier of the member who organises the event          | VARCHAR2(20)              | Any valid member identifier (must ensure it belongs to a member, not a guest) | No Default Value  | Yes        | No      | Foreign Key |
+| **LeaderID**            | The identifier of the member who presents the event on the event day | VARCHAR2(20)              | Any valid member identifier (must ensure it belongs to a member, not a guest) | No Default Value  | Yes        | No      | Foreign Key |
+
+### Foreign Keys
+- **OrganiserID** references `MEMBER(MemberID)`
+  - `ON UPDATE NO ACTION`
+  - `ON DELETE NO ACTION`
+
+- **LeaderID** references `MEMBER(MemberID)`
+  - `ON UPDATE NO ACTION`
+  - `ON DELETE NO ACTION`
+
+### Additional Notes:
+- Ensure that **OrganiserID** and **LeaderID** belong to members and not to guests by using triggers.
+- **EventCategory**:  
+  - ‘OG’ stands for **Open Gardens**  
+  - ‘ST’ stands for **Skills and Techniques**  
+  - ‘KYP’ stands for **Know Your Plants**
+
+
+## EVENT_PARTICIPATION Relation
+
+| Column Name        | Brief Description                                                                 | Oracle Data Type and Size | Domain (Allowable Values)                                                          | Default Value     | Required?  | Unique? | Key?        |
+|--------------------|-----------------------------------------------------------------------------------|---------------------------|------------------------------------------------------------------------------------|-------------------|------------|---------|-------------|
+| **EventID**        | The identifier of the event that allows us to uniquely identify a particular event | VARCHAR2(20)              | Any valid event identifier                                                         | No Default Value  | Yes        | No      | Part of Primary Key |
+| **MemberID**       | The identifier of the member/guest who is participating in the event. The organiser or leader’s MemberID of a particular event must not be a participant of that event he/she is organising/leading. | VARCHAR2(20)              | The identifier of the member/guest who is participating                            | No Default Value  | Yes        | No      | Part of Primary Key |
+| **ParticipationType** | The type of participation in the event. Only two possible values: ‘Attendee’ or ‘Helper’. Only members can be ‘Helper’, but both guests and members can be ‘Attendee’. | VARCHAR2(8)               | ‘Attendee’ OR ‘Helper’ (only members can be ‘Helper’)                             | No Default Value  | Yes        | No      |             |
+
+### Foreign Keys
+- **EventID** references `EVENT(EventID)`
+  - `ON DELETE CASCADE`
+  - `ON UPDATE NO ACTION`
+
+- **MemberID** references `MEMBER(MemberID)`
+  - `ON DELETE CASCADE`
+  - `ON UPDATE NO ACTION`
+
+### Additional Notes:
+- **EventID**:  
+  If the event is removed, the record will be removed since it is illogical to participate in a non-existent event. This is why `ON DELETE CASCADE` is implemented.  
+  `ON UPDATE NO ACTION` is used because the EventID should never be changed.
+
+- **MemberID**:  
+  If a person is no longer a member/guest, they should no longer be a participant of the event. This is why `ON DELETE CASCADE` is implemented.  
+  `ON UPDATE NO ACTION` is used because the MemberID should never be changed.
+
+- **ParticipationType**:  
+  There are only two possible values: 'Attendee' and 'Helper'.  
+  Only members can be 'Helper', and both guests and members can be 'Attendee'.  
+  Use triggers to ensure that only members are helpers (by checking against the `MEMBER` relation).  
+  Use triggers to ensure helpers are not organisers or leaders (by checking against the `EVENT` relation).
+
