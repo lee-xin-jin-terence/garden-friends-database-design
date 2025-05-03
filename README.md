@@ -27,9 +27,9 @@ The project includes a well-structured database schema to store user, event, and
 ![ASSIGNMENT_2_ERD_DIAGRAM](https://github.com/user-attachments/assets/fa01496b-ac33-4192-a3be-b8063ed22ce3)
 
 
-## Data Dictionary
+# Data Dictionary
 
-### MEMBER Relation
+## MEMBER Relation
 
 | Column Name     | Brief Description                                                            | Oracle Data Type and Size | Domain (Allowable Values)                          | Default Value     | Required?              | Unique?         | Key?         |
 |-----------------|-----------------------------------------------------------------------------|---------------------------|----------------------------------------------------|-------------------|------------------------|-----------------|--------------|
@@ -46,7 +46,7 @@ The project includes a well-structured database schema to store user, event, and
 
 
 
-### SERVICE_CATEGORY Relation
+## SERVICE_CATEGORY Relation
 
 | Column Name        | Brief Description                                           | Oracle Data Type and Size | Domain (Allowable Values)                                              | Default Value     | Required?  | Unique? | Key?        |
 |--------------------|-------------------------------------------------------------|---------------------------|-----------------------------------------------------------------------|-------------------|------------|---------|-------------|
@@ -55,3 +55,53 @@ The project includes a well-structured database schema to store user, event, and
 
 ### Remarks:
 The **CategoryDescription** is also unique as no two CategoryDescription values should have the same text.
+
+
+
+## SERVICE Relation
+
+| Column Name        | Brief Description                                          | Oracle Data Type and Size | Domain (Allowable Values)                                              | Default Value     | Required?  | Unique? | Key?        |
+|--------------------|------------------------------------------------------------|---------------------------|-----------------------------------------------------------------------|-------------------|------------|---------|-------------|
+| **ServiceName**     | The name of the service                                    | VARCHAR2(50)              | Any valid service (e.g. ‘mowing’, ‘collecting plants from the nursery’, ‘paving’) | No Default Value  | Yes        | Yes     | Primary Key |
+| **ServiceDescription** | The description of the service                            | VARCHAR2(600)             | Any valid description of the service provided                         | No Default Value  | Yes        | Yes     | Alternate Key |
+| **ServiceCategoryName** | What category the service is under                         | VARCHAR2(20)              | Any valid category the service is under (e.g., ‘mowing’ under ‘maintenance’, ‘paving’ under ‘landscaping’) | No Default Value  | Yes        | No      | Foreign Key  |
+
+### Foreign Key
+- **ServiceCategoryName** references `SERVICE_CATEGORY (ServiceCategoryName)`
+  - `ON UPDATE NO ACTION`
+  - `ON DELETE NO ACTION`
+
+### Remarks:
+- The **ServiceCategoryName** should never be changed (hence **NO ACTION** on update).
+- No instances in the `SERVICE_CATEGORY` relation should be deleted (hence **NO ACTION** on delete).
+
+
+## MEMBER_SERVICE Relation
+
+| Column Name         | Brief Description                                              | Oracle Data Type and Size | Domain (Allowable Values)                                  | Default Value     | Required?  | Unique? | Key?        |
+|---------------------|----------------------------------------------------------------|---------------------------|-----------------------------------------------------------|-------------------|------------|---------|-------------|
+| **MemberServiceID**  | The unique identifier for the service provided by the member  | VARCHAR2(20)              | Any valid identifier for the service offered by the member | No Default Value  | Yes        | Yes     | Primary Key |
+| **Description**      | Detailed description of the service the member is providing    | VARCHAR2(600)             | Any valid detailed description of the service              | No Default Value  | Yes        | No      |             |
+| **Conditions**       | Conditions that the requester must agree to before the service | VARCHAR2(600)             | Any valid conditions for the service                       | No Default Value  | No         | No      |             |
+| **StartDate**        | Starting date when the member will be available for service    | DATE                      | Any valid starting date (must be before or equal to EndDate) | No Default Value  | No         | No      |             |
+| **EndDate**          | Final date when the member will be available for service      | DATE                      | Any valid final date (must be after or equal to StartDate)  | No Default Value  | No         | No      |             |
+| **Frequency**        | Frequency of the service availability                         | VARCHAR2(50)              | Valid values: ‘any Sunday’, ‘any day’, ‘by arrangement’    | No Default Value  | No         | No      |             |
+| **MemberID**         | Identifier of the member providing the service                 | VARCHAR2(20)              | Any valid MemberID from the MEMBER relation                 | No Default Value  | Yes        | No      | Foreign Key |
+| **ServiceName**      | The name of the service being offered                          | VARCHAR2(50)              | Any valid ServiceName from the SERVICE relation             | No Default Value  | Yes        | No      | Foreign Key |
+
+## Foreign Keys
+- **MemberID** references `MEMBER(MemberID)`
+  - `ON DELETE CASCADE`
+  - `ON UPDATE NO ACTION`
+  
+- **ServiceName** references `SERVICE(ServiceName)`
+  - `ON UPDATE NO ACTION`
+  - `ON DELETE NO ACTION`
+
+### Remarks:
+- **Triggers** are needed to ensure that entries in `MEMBER_SERVICE` come from members (not guests) by checking the `MEMBER` relation.
+- Ensure that **either StartDate or Frequency is filled** (not null).
+- If **EndDate** is filled, **StartDate must also be filled**. If **StartDate** is filled, it is not mandatory for **EndDate** to be filled.
+- When both **StartDate** and **EndDate** are filled, **StartDate must be equal to or earlier than EndDate**.
+
+
