@@ -26,3 +26,24 @@ The project includes a well-structured database schema to store user, event, and
 
 ![ASSIGNMENT_2_ERD_DIAGRAM](https://github.com/user-attachments/assets/fa01496b-ac33-4192-a3be-b8063ed22ce3)
 
+
+## Data Dictionary
+
+**MEMBER Relation**
+
+| Column Name     | Brief Description                                                            | Oracle Data Type and Size | Domain (Allowable Values)                          | Default Value     | Required?              | Unique?         | Key?         |
+|-----------------|-----------------------------------------------------------------------------|---------------------------|----------------------------------------------------|-------------------|------------------------|-----------------|--------------|
+| **MemberID**    | The unique identifier of the member/guest.                                   | VARCHAR2(20)              | Any valid member identifier                        | No Default Value  | Yes                    | Yes             | Primary Key  |
+| **MembershipType** | Describes whether the person is a member or a guest. Only two possible values. | VARCHAR2(6)               | “Member”, “Guest”                                  | No Default Value  | Yes                    | No              |              |
+| **EmailAddress** | The email address of the member/guest. It is an alternate key.               | VARCHAR2(40)              | Any valid email address (should have one "@" symbol) | No Default Value  | Yes                    | Yes             | Alternate Key|
+| **FirstName**    | The first name of the member/guest.                                           | VARCHAR2(40)              | Any valid name                                     | No Default Value  | Yes                    | No              |              |
+| **LastName**     | The last name of the member/guest.                                            | VARCHAR2(40)              | Any valid name                                     | No Default Value  | Yes                    | No              |              |
+| **StreetAddress** | The street address of the member. Applies only to members, not guests.      | VARCHAR2(80)              | Any valid street address                           | No Default Value  | Required for records where MembershipType=’Member’, to be left null for records where MembershipType=’Guest’ | No |              |
+| **Suburb**       | The suburb where the member/guest lives.                                      | VARCHAR2(20)              | Any valid suburb                                   | No Default Value  | Yes                    | No              |              |
+| **ContactNumber** | The contact/mobile number of the member/guest. Assumes that everyone has a unique contact number. | VARCHAR2(20) | Any valid contact number                           | No Default Value  | Yes                    | Yes             | Alternate Key|
+| **Biography**    | A simple description about the member’s gardening interest. Applies only to members, not guests. | VARCHAR2(600)             | Any valid description of the member’s gardening interests | No Default Value  | Required for records where MembershipType=’Member’, to be left null for records where MembershipType=’Guest’ | No |              |
+
+### Additional Remarks:
+None
+
+
