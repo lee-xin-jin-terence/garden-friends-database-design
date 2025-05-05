@@ -93,7 +93,7 @@ The **CategoryDescription** is also unique as no two CategoryDescription values 
 | **MemberID**         | Identifier of the member providing the service                 | VARCHAR2(20)              | Any valid MemberID from the MEMBER relation                 | No Default Value  | Yes        | No      | Foreign Key |
 | **ServiceName**      | The name of the service being offered                          | VARCHAR2(50)              | Any valid ServiceName from the SERVICE relation             | No Default Value  | Yes        | No      | Foreign Key |
 
-## Foreign Keys
+### Foreign Keys
 - **MemberID** references `MEMBER(MemberID)`
   - `ON DELETE CASCADE`
   - `ON UPDATE NO ACTION`
